@@ -4,4 +4,4 @@ const port=5050; // הגדרת היציאה אליה יאזין השרת
 const srv=http.createServer(app); // יצירת אובייקט שרת
 srv.listen(port, ()=>{
     console.log('Server Is Up')
-});// העלאת השרת לאוויר
+});                     // העלאת השרת לאוויר
