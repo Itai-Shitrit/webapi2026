@@ -9,17 +9,17 @@ const myLog=require('./api/v1/middlewares/myLog'); // צירפנו את שכבת
 // const myLog=(req,res,next)=>{
 //     console.log(`${req.}`);
 // }
-app.use((req,res,next)=>{
-    const arrAllowList=['127.0.0.1','::1'];
-    for(let i=0; i<arrAllowList; i++)
-    {
-        if(arrAllowList[i]==req.ip)
-            {
-                next();
-            }
-    }
-    return res.status(401).json({msg:`You Are Not Allowed`})
-});
+// app.use((req,res,next)=>{
+//     const arrAllowList=['127.0.0.1','::1'];
+//     for(let i=0; i<arrAllowList; i++)
+//     {
+//         if(arrAllowList[i]==req.ip)
+//             {
+//                 next();
+//             }
+//     }
+//     return res.status(401).json({msg:`You Are Not Allowed`})
+// });
 // app.use((req,res,next)=>{
 //     if(req.method=='GET' && req.path=='/product')
 //     {
