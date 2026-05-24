@@ -1,7 +1,7 @@
 const mySqlDB=require('../models/mySqlDB')
 module.exports={
     getAll:(req,res)=>{
-        const sql='select * from t_product';
+        const sql='select * from t_user';
         mySqlDB.query(sql,(err,results,feilds)=>{
             if(err==null)
             {
@@ -18,8 +18,8 @@ module.exports={
 },
     
     getById:(req,res)=>{
-    const pid=req.params.id; // קבלת קוד המוצר שנשלח
-    const sql=`select * from t_product where pid=${pid}`;
+    const uid=req.params.id; // קבלת קוד המוצר שנשלח
+    const sql=`select * from t_user where uid=${uid}`;
         mySqlDB.query(sql,(err,results,feilds)=>{
             if(err==null)
             {
@@ -46,7 +46,7 @@ module.exports={
     }
     fields=fields.substring(0,fields.length-1);
     values=values.substring(0,values.length-1);
-    let sql=`Insert into t_product (${fields}) Values(${values})`;
+    let sql=`Insert into t_user (${fields}) Values(${values})`;
 
      mySqlDB.query(sql,(err,results,feilds)=>{
             if(err==null)
@@ -63,8 +63,8 @@ module.exports={
 },
     
     update:(req,res)=>{
-    const pid=req.params.id; // קבלת קוד המוצר שנשלח
-    let sql='update t_product set ';
+    const uid=req.params.id; // קבלת קוד המוצר שנשלח
+    let sql='update t_user set ';
     let data=req.body; // שמירת התוכן שנשלח בגוף הבקשה
     let arr=Object.keys(data);
     for(let i=0;i<arr.length;i++)
@@ -72,7 +72,7 @@ module.exports={
          sql +=`${arr[i]}='${data[arr[i]]}',`;
     }
     sql=sql.substring(0,sql.length-1);
-    sql+='Where pid='+ pid;
+    sql+='Where uid='+ uid;
     console.log(sql);
      mySqlDB.query(sql,(err,results,feilds)=>{
             if(err==null)
@@ -89,8 +89,8 @@ module.exports={
 },
     
     delete:(req,res)=>{
-    const pid=req.params.id; // קבלת קוד המוצר שנשלח
-    const sql=`delete from t_product where pid=${pid}`;
+    const uid=req.params.id; // קבלת קוד המוצר שנשלח
+    const sql=`delete from t_user where uid=${uid}`;
         mySqlDB.query(sql,(err,results,feilds)=>{
             if(err==null)
             {
