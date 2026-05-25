@@ -1,3 +1,4 @@
+require('dotenv').config(); //הפעלת הפונקציה שטוענת את קובץ דוט איאנוי
 const express=require('express') // חיבור לספריית אקפרס
 const app=express(); // יצירת אפליקצית אקספרס
 const routerProduct=require('./api/v1/routes/products'); // ייבוא של הראוטר של המוצרים
