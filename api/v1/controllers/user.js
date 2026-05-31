@@ -1,5 +1,7 @@
 const mySqlDB=require('../models/mySqlDB');
 const bcrypt=require('bcrypt');
+const jwt=require('jsonwebtoken');
+
 module.exports={
     getAll:(req,res)=>{
         const sql='select * from t_user';
@@ -16,8 +18,7 @@ module.exports={
             }
    
 }); //הפעלת השאילתה וקבלת התוצאות בתוך פונקציית החזרה;
-},
-    
+},    
     getById:(req,res)=>{
     const uid=req.params.id; // קבלת קוד המוצר שנשלח
     const sql=`select * from t_user where uid=${uid}`;
@@ -87,8 +88,7 @@ module.exports={
                     });
 
 
-},
-    
+},    
     update:(req,res)=>{
     const uid=req.params.id; // קבלת קוד המוצר שנשלח
     let sql='update t_user set ';
@@ -113,8 +113,7 @@ module.exports={
              return res.status(500).json({'error':err.message});
             }
     });
-},
-    
+},   
     delete:(req,res)=>{
     const uid=req.params.id; // קבלת קוד המוצר שנשלח
     const sql=`delete from t_user where uid=${uid}`;
@@ -129,6 +128,42 @@ module.exports={
              console.log(err);
              return res.status(500).json({'error':err.message});
             }
-            //איתי שטרית
 });
-    }}
+},
+    login:(req,res)=>{
+    //התחברות
+     
+    let data=req.body; // שמירת התוכן שנשלח בגוף הבקשה
+    
+    const sql=`Select * from t_user where email='${data.email}'`;
+    mySqlDB.query(sql,(err,results)=>{
+        if(err!=null) // במידה והייתה שגיאת מערכת מציגים הודעה מתאימה
+        {
+         console.log(results);
+         return res.status(500).json({status:false,error:err.message,data:[]});
+        }
+        else if(results.length==0) // לא נמצא משתמש עם המייל שנשלח
+        {
+          return res.status(200).json({status:false,error:null,data:[]});
+        }
+        // המשתמש נמצא, נבדוק תקינות הסיסמא שהוזנה
+        let user=results[0];
+        bcrypt.compare(data.pass,user.pass,(err,same)=>{
+            if(err!=null) // במידה והייתה שגיאת מערכת מציגים הודעה מתאימה
+            {
+             console.log(err);
+                 return res.status(500).json({status:false,error:err.message,data:[]});
+            }
+            if(same==true)
+            {
+                //לאחר אימות הפרטים , נייצר טוקן עבור החיבור הנוכחי של המשתמש
+               const token=jwt.sign({uid:user.uid,email:user.email},process.env.PRIVATE_KEY,{expiresIn:'1h'});
+               return res.status(200).json({status:true,error:null,data:results,token});
+            }
+            else{
+               return res.status(200).json({status:false,error:null,data:[]});
+
+            }
+        })
+    });
+}};

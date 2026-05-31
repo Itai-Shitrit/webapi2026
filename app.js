@@ -6,33 +6,8 @@ const routerUser=require('./api/v1/routes/user'); // ייבוא של הראוט�
 const routerCategory=require('./api/v1/routes/category'); // ייבוא של הראוטר של הקטגוריות
 const morgan=require('morgan');
 const myLog=require('./api/v1/middlewares/myLog'); // צירפנו את שכבת הלוג שבנינו
-
-// ניצור שכבת ביניים משלנו middleware
-
-// const myLog=(req,res,next)=>{
-//     console.log(`${req.}`);
-// }
-// app.use((req,res,next)=>{
-//     const arrAllowList=['127.0.0.1','::1'];
-//     for(let i=0; i<arrAllowList; i++)
-//     {
-//         if(arrAllowList[i]==req.ip)
-//             {
-//                 next();
-//             }
-//     }
-//     return res.status(401).json({msg:`You Are Not Allowed`})
-// });
-// app.use((req,res,next)=>{
-//     if(req.method=='GET' && req.path=='/product')
-//     {
-//         return res.status(200).json({msg:'all products'});
-//     }
-//     else{
-//         next();
-//     }
-// });
-
+//const jwt=require('jsonwebtoken');
+const auth=require('./api/v1/middlewares/auth');
 
 app.use(myLog); // הוספת שכבת הלוג שצירפנו אל האפליקציה
 app.use(morgan('dev')); // הוספת שכבה שמבצעת רישום של כל בקשה במערכת אל הקונסול, משמש אותנו לצורך מעקב ובקרה
@@ -41,7 +16,7 @@ app.use(express.json());
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט יו.אר.אל אנקודד
 app.use(express.urlencoded());
 
-app.use('/product',routerProduct); // שילוב של הראוטר מוצרים 
+app.use('/product',auth,routerProduct); // שילוב של הראוטר מוצרים 
 app.use('/user',routerUser); // שילוב של הראוטר משתמשים 
 app.use('/category',routerCategory); // שילוב של הראוטר קטגוריות 
 

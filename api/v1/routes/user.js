@@ -8,5 +8,6 @@ router.get('/:id',userController.getById);
 router.delete('/:id',userController.delete); // מחיקה
 router.post('/',userController.add);  // הוספת חדש
 router.put('/:id',userController.update); // עדכון
+router.post('/login',userController.login); // התחברות
 
 module.exports=router; // יצוא של הראוטר
