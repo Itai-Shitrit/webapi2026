@@ -20,7 +20,7 @@ app.use(morgan('dev')); // הוספת שכבה שמבצעת רישום של כל
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט גייסון
 app.use(express.json());
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט יו.אר.אל אנקודד
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended:true}));
 
 app.use('/product',routerProduct); // שילוב של הראוטר מוצרים 
 app.use('/user',routerUser); // שילוב של הראוטר משתמשים 
