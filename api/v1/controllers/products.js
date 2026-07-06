@@ -1,59 +1,60 @@
-const mySqlDB=require('../models/mySqlDB')
+const productModel=require('../models/product');
 module.exports={
-    getAll:(req,res)=>{
-        const sql='select * from t_product';
-        mySqlDB.query(sql,(err,results,feilds)=>{
-            if(err==null)
-            {
-             console.log(results);
-             return res.status(200).json(results);
-            }
-            else
-            {
-             console.log(err);
-             return res.status(500).json({'error':err.message});
-            }
-   
-}); //הפעלת השאילתה וקבלת התוצאות בתוך פונקציית החזרה;
-},
+    getAll:async(req,res)=>{
+        try{
+             const data=await productModel.find(); //
+             return res.status(200).json(data);
+        }
+        catch(err){
+             return res.status(500).json(err);
+        }
+    },
     
-    getById:(req,res)=>{
-    const pid=req.params.id; // קבלת קוד המוצר שנשלח
-    const sql=`select * from t_product where pid=${pid}`;
-        mySqlDB.query(sql,(err,results,feilds)=>{
-            if(err==null)
-            {
-             console.log(results);
-             return res.status(200).json(results);
-            }
-            else
-            {
-             console.log(err);
-             return res.status(500).json({'error':err.message});
-            }
-});
-},
-    add:(req,res)=>{
+    getById:async(req,res)=>{
+        const pid=req.params.id; // קבלת קוד המוצר שנשלח
+            try{
+            const data=await productModel.find({pid:pid}); //
+            return res.status(200).json(data);
+        }
+        catch(err){
+             return res.status(500).json(err);
+        }
+    },
+
+        add:async(req,res)=>{
     // הוספת מוצר חדש
-     res.status(200).json({msg:`Your Product Successfully Added`});},
+    let data=req.body; // שמירת התוכן שנשלח בגוף הבקשה
+    try{
+        const result=await productModel.create(data);
+        return res.status(200).json(result);
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({error:err.message});
+    }
+},
     
-    update:(req,res)=>{
+    update:async(req,res)=>{
     const pid=req.params.id; // קבלת קוד המוצר שנשלח
-     res.status(200).json({msg:`Your Product Successfully Updated`});},
+    let data=req.body; // שמירת התוכן שנשלח בגוף הבקשה
+    try{
+        const result=await productModel.updateOne({pid:pid},data);
+        return res.status(200).json(result);
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({error:err.message});
+    }
+},
     
-    delete:(req,res)=>{
+    delete:async(req,res)=>{
     const pid=req.params.id; // קבלת קוד המוצר שנשלח
-    const sql=`delete from t_product where pid=${pid}`;
-        mySqlDB.query(sql,(err,results,feilds)=>{
-            if(err==null)
-            {
-             console.log(results);
-             return res.status(200).json(results);
-            }
-            else
-            {
-             console.log(err);
-             return res.status(500).json({'error':err.message});
-            }
-});
-    }}
+    try{
+        const result=await productModel.deleteOne({pid:pid});
+        return res.status(200).json(result);
+    }
+    catch(err){
+        console.log(err);
+        return res.status(500).json({error:err.message});
+    }
+}};
