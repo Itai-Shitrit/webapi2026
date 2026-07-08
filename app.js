@@ -9,11 +9,27 @@ const myLog=require('./api/v1/middlewares/myLog'); // צירפנו את שכבת
 //const jwt=require('jsonwebtoken');
 const auth=require('./api/v1/middlewares/auth');
 const mongoose=require('mongoose');
+const session=require('express-session');
+const { default: MongoStore } = require('connect-mongo');
 
 const connStr=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_SRV}/ecomdb`; 
 mongoose.connect(connStr).then((conn)=>{
     console.log('Connected Successfully')
 }); // יצירת חיבור לבסיס הנתונים
+
+app.use(session({
+    secret:process.env.PRIVATE_KEY,
+    resave:false,
+    saveUninitialized:true,
+    store:MongoStore.create({
+        mongoUrl:connStr
+    }),
+    cookie:{
+        path:'/',
+        secure:false,
+        maxAge:1000*60*20,
+    }
+}));
 
 app.use(myLog); // הוספת שכבת הלוג שצירפנו אל האפליקציה
 app.use(morgan('dev')); // הוספת שכבה שמבצעת רישום של כל בקשה במערכת אל הקונסול, משמש אותנו לצורך מעקב ובקרה
