@@ -38,7 +38,7 @@ app.use(express.json());
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט יו.אר.אל אנקודד
 app.use(express.urlencoded());
 app.use('/product',routerProduct); // שילוב של הראוטר מוצרים 
-
+ 
 
 module.exports=app; // יצא של המודול שכתבנו
 
