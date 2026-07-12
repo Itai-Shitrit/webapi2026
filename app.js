@@ -37,7 +37,7 @@ app.use(morgan('dev')); // הוספת שכבה שמבצעת רישום של כל
 app.use(express.json());
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט יו.אר.אל אנקודד
 app.use(express.urlencoded({extended:true}));
-
+  
 app.use('/product',routerProduct); // שילוב של הראוטר מוצרים 
 
 
