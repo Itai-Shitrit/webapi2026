@@ -2,8 +2,8 @@ require('dotenv').config(); //הפעלת הפונקציה שטוענת את קו
 const express=require('express') // חיבור לספריית אקפרס
 const app=express(); // יצירת אפליקצית אקספרס
 const routerProduct=require('./api/v1/routes/products'); // ייבוא של הראוטר של המוצרים
-const routerUser=require('./api/v1/routes/user'); // ייבוא של הראוטר של המשתמשים
-const routerCategory=require('./api/v1/routes/category'); // ייבוא של הראוטר של הקטגוריות
+//const routerUser=require('./api/v1/routes/user'); // ייבוא של הראוטר של המשתמשים
+//const routerCategory=require('./api/v1/routes/category'); // ייבוא של הראוטר של הקטגוריות
 const morgan=require('morgan');
 const myLog=require('./api/v1/middlewares/myLog'); // צירפנו את שכבת הלוג שבנינו
 //const jwt=require('jsonwebtoken');
