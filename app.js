@@ -1,45 +1,44 @@
+require('dotenv').config(); //הפעלת הפונקציה שטוענת את קובץ דוט איאנוי
 const express=require('express') // חיבור לספריית אקפרס
 const app=express(); // יצירת אפליקצית אקספרס
 const routerProduct=require('./api/v1/routes/products'); // ייבוא של הראוטר של המוצרים
+const routerUser=require('./api/v1/routes/user'); // ייבוא של הראוטר של המשתמשים
+const routerCategory=require('./api/v1/routes/category'); // ייבוא של הראוטר של הקטגוריות
 const morgan=require('morgan');
 const myLog=require('./api/v1/middlewares/myLog'); // צירפנו את שכבת הלוג שבנינו
+//const jwt=require('jsonwebtoken');
+const auth=require('./api/v1/middlewares/auth');
+const mongoose=require('mongoose');
+const session=require('express-session');
+const { default: MongoStore } = require('connect-mongo');
 
-// ניצור שכבת ביניים משלנו middleware
+const connStr=`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@${process.env.MONGO_SRV}/ecomdb`; 
+mongoose.connect(connStr).then((conn)=>{
+    console.log('Connected Successfully')
+}); // יצירת חיבור לבסיס הנתונים
 
-// const myLog=(req,res,next)=>{
-//     console.log(`${req.}`);
-// }
-// app.use((req,res,next)=>{
-//     const arrAllowList=['127.0.0.1','::1'];
-//     for(let i=0; i<arrAllowList; i++)
-//     {
-//         if(arrAllowList[i]==req.ip)
-//             {
-//                 next();
-//             }
-//     }
-//     return res.status(401).json({msg:`You Are Not Allowed`})
-// });
-// app.use((req,res,next)=>{
-//     if(req.method=='GET' && req.path=='/product')
-//     {
-//         return res.status(200).json({msg:'all products'});
-//     }
-//     else{
-//         next();
-//     }
-// });
-
+app.use(session({
+    secret:process.env.PRIVATE_KEY,
+    resave:false,
+    saveUninitialized:true,
+    store:MongoStore.create({
+        mongoUrl:connStr
+    }),
+    cookie:{
+        path:'/',
+        secure:false,
+        maxAge:1000*60*20,
+    }
+}));
 
 app.use(myLog); // הוספת שכבת הלוג שצירפנו אל האפליקציה
 app.use(morgan('dev')); // הוספת שכבה שמבצעת רישום של כל בקשה במערכת אל הקונסול, משמש אותנו לצורך מעקב ובקרה
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט גייסון
 app.use(express.json());
 //נוסיף שכבת ביניים שמטפלת בגוף של הבקשה הנשלחת בפורמט יו.אר.אל אנקודד
-app.use(express.urlencoded());
+app.use(express.urlencoded({extended:true}));
+
 app.use('/product',routerProduct); // שילוב של הראוטר מוצרים 
- 
+
 
 module.exports=app; // יצא של המודול שכתבנו
-
-//new comment
